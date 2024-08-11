@@ -156,6 +156,10 @@ impl<'a> Frame<'a> {
         self.frame_surface.clone()
     }
 
+    pub fn texture_ref(&self) -> &ID3D11Texture2D {
+        &self.frame_texture
+    }
+
     /// Get the raw texture of the frame.
     ///
     /// # Returns
@@ -185,9 +189,9 @@ impl<'a> Frame<'a> {
             self.d3d_device
                 .CreateTexture2D(&texture_desc, None, Some(&mut texture))?;
         };
-        
+
         let texture = texture.unwrap();
-        
+
         // Copy the real texture to copy texture
         unsafe {
             self.context.CopyResource(&texture, &self.frame_texture);

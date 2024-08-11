@@ -240,12 +240,8 @@ impl VideoEncoder {
                 MediaEncodingProfile::CreateVp9(VideoEncodingQuality(encoder_quality as i32))?
             }
         };
-        media_encoding_profile
-            .Video()?
-            .SetWidth(width)?;
-        media_encoding_profile
-            .Video()?
-            .SetHeight(height)?;
+        media_encoding_profile.Video()?.SetWidth(width)?;
+        media_encoding_profile.Video()?.SetHeight(height)?;
         if fps.is_some() {
             media_encoding_profile
                 .Video()?
@@ -256,7 +252,7 @@ impl VideoEncoder {
                 .FrameRate()?
                 .SetDenominator(1)?;
         }
-    
+
         let video_encoding_properties = VideoEncodingProperties::CreateUncompressed(
             &MediaEncodingSubtypes::Bgra8()?,
             width,
