@@ -49,7 +49,7 @@ pub struct Settings<Flags, T: TryInto<GraphicsCaptureItem>> {
     pub color_format: ColorFormat,
     /// Additional flags for capturing graphics.
     pub flags: Flags,
-    pub d3d: Option<Direct3D>,
+    pub direct3d: Option<Direct3D>,
 }
 
 impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
@@ -68,7 +68,7 @@ impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
         draw_border: DrawBorderSettings,
         color_format: ColorFormat,
         flags: Flags,
-        d3d: Option<Direct3D>,
+        direct3d: Option<Direct3D>,
     ) -> Self {
         Self {
             item,
@@ -76,7 +76,7 @@ impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
             draw_border,
             color_format,
             flags,
-            d3d,
+            direct3d,
         }
     }
 }

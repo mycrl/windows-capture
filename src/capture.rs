@@ -265,7 +265,7 @@ pub trait GraphicsCaptureApiHandler: Sized {
             .map_err(|_| GraphicsCaptureApiError::ItemConvertFailed)?;
 
         let mut capture = GraphicsCaptureApi::new(
-            settings.d3d,
+            settings.direct3d,
             item,
             callback,
             settings.cursor_capture,
@@ -378,7 +378,7 @@ pub trait GraphicsCaptureApiHandler: Sized {
                     .map_err(|_| GraphicsCaptureApiError::ItemConvertFailed)?;
 
                 let mut capture = GraphicsCaptureApi::new(
-                    settings.d3d,
+                    settings.direct3d,
                     item,
                     callback.clone(),
                     settings.cursor_capture,
