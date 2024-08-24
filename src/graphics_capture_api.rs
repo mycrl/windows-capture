@@ -23,9 +23,9 @@ use windows::{
 
 use crate::{
     capture::GraphicsCaptureApiHandler,
-    d3d11::{self, create_direct3d_device, SendDirectX},
+    d3d11::{self, create_d3d_device, create_direct3d_device, SendDirectX},
     frame::Frame,
-    settings::{ColorFormat, CursorCaptureSettings, DrawBorderSettings},
+    settings::{ColorFormat, CursorCaptureSettings, Direct3D, DrawBorderSettings},
 };
 
 #[derive(thiserror::Error, Eq, PartialEq, Clone, Debug)]
@@ -114,8 +114,7 @@ impl GraphicsCaptureApi {
         T: GraphicsCaptureApiHandler<Error = E> + Send + 'static,
         E: Send + Sync + 'static,
     >(
-        d3d_device: ID3D11Device,
-        d3d_device_context: ID3D11DeviceContext,
+        d3d: Option<Direct3D>,
         item: GraphicsCaptureItem,
         callback: Arc<Mutex<T>>,
         cursor_capture: CursorCaptureSettings,
@@ -140,6 +139,12 @@ impl GraphicsCaptureApi {
         }
 
         // Create DirectX devices
+        let (d3d_device, d3d_device_context) = if let Some(d3d) = d3d {
+            (d3d.device, d3d.context)
+        } else {
+            create_d3d_device()?
+        };
+
         let direct3d_device = create_direct3d_device(&d3d_device)?;
 
         let pixel_format = DirectXPixelFormat(color_format as i32);

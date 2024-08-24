@@ -14,7 +14,6 @@ use windows::{
     Graphics::Capture::GraphicsCaptureItem,
     Win32::{
         Foundation::{HANDLE, LPARAM, WPARAM},
-        Graphics::Direct3D11::{ID3D11Device, ID3D11DeviceContext},
         System::{
             Threading::{GetCurrentThreadId, GetThreadId},
             WinRT::{
@@ -30,7 +29,6 @@ use windows::{
 };
 
 use crate::{
-    d3d11::create_d3d_device,
     frame::Frame,
     graphics_capture_api::{self, GraphicsCaptureApi, InternalCaptureControl},
     settings::Settings,
@@ -255,21 +253,10 @@ pub trait GraphicsCaptureApiHandler: Sized {
         // Get current thread ID
         let thread_id = unsafe { GetCurrentThreadId() };
 
-        let (d3d_device, d3d_device_context) = create_d3d_device().map_err(|e| {
-            GraphicsCaptureApiError::GraphicsCaptureApiError(
-                graphics_capture_api::Error::DirectXError(e),
-            )
-        })?;
-
         // Start capture
         let result = Arc::new(Mutex::new(None));
         let callback = Arc::new(Mutex::new(
-            Self::new(
-                d3d_device.clone(),
-                d3d_device_context.clone(),
-                settings.flags,
-            )
-            .map_err(GraphicsCaptureApiError::NewHandlerError)?,
+            Self::new(settings.flags).map_err(GraphicsCaptureApiError::NewHandlerError)?,
         ));
 
         let item = settings
@@ -278,8 +265,7 @@ pub trait GraphicsCaptureApiHandler: Sized {
             .map_err(|_| GraphicsCaptureApiError::ItemConvertFailed)?;
 
         let mut capture = GraphicsCaptureApi::new(
-            d3d_device,
-            d3d_device_context,
+            settings.d3d,
             item,
             callback,
             settings.cursor_capture,
@@ -380,21 +366,10 @@ pub trait GraphicsCaptureApiHandler: Sized {
                 // Get current thread ID
                 let thread_id = unsafe { GetCurrentThreadId() };
 
-                let (d3d_device, d3d_device_context) = create_d3d_device().map_err(|e| {
-                    GraphicsCaptureApiError::GraphicsCaptureApiError(
-                        graphics_capture_api::Error::DirectXError(e),
-                    )
-                })?;
-
                 // Start capture
                 let result = Arc::new(Mutex::new(None));
                 let callback = Arc::new(Mutex::new(
-                    Self::new(
-                        d3d_device.clone(),
-                        d3d_device_context.clone(),
-                        settings.flags,
-                    )
-                    .map_err(GraphicsCaptureApiError::NewHandlerError)?,
+                    Self::new(settings.flags).map_err(GraphicsCaptureApiError::NewHandlerError)?,
                 ));
 
                 let item = settings
@@ -403,8 +378,7 @@ pub trait GraphicsCaptureApiHandler: Sized {
                     .map_err(|_| GraphicsCaptureApiError::ItemConvertFailed)?;
 
                 let mut capture = GraphicsCaptureApi::new(
-                    d3d_device,
-                    d3d_device_context,
+                    settings.d3d,
                     item,
                     callback.clone(),
                     settings.cursor_capture,
@@ -504,11 +478,7 @@ pub trait GraphicsCaptureApiHandler: Sized {
     /// # Returns
     ///
     /// Returns `Ok(Self)` if the struct creation was successful, otherwise returns an error of type `Self::Error`.
-    fn new(
-        d3d_device: ID3D11Device,
-        d3d_device_context: ID3D11DeviceContext,
-        flags: Self::Flags,
-    ) -> Result<Self, Self::Error>;
+    fn new(flags: Self::Flags) -> Result<Self, Self::Error>;
 
     /// Called every time a new frame is available.
     ///
