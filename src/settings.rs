@@ -59,9 +59,11 @@ impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
     ///
     /// * `item` - The graphics capture item.
     /// * `capture_cursor` - Whether to capture the cursor or not.
-    /// * `draw_border` - Whether to draw a border around the captured region or not.
+    /// * `draw_border` - Whether to draw a border around the captured region or
+    ///   not.
     /// * `color_format` - The desired color format for the captured frame.
-    /// * `flags` - Additional flags for the capture settings that will be passed to user defined `new` function.
+    /// * `flags` - Additional flags for the capture settings that will be
+    ///   passed to user defined `new` function.
     pub const fn new(
         item: T,
         cursor_capture: CursorCaptureSettings,

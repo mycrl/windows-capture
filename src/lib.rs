@@ -147,19 +147,23 @@
 #![warn(clippy::cargo)]
 #![allow(clippy::multiple_crate_versions)] // Should update as soon as possible
 
-/// Contains the main capture functionality, including the `WindowsCaptureHandler` trait and related types.
+/// Contains the main capture functionality, including the
+/// `WindowsCaptureHandler` trait and related types.
 pub mod capture;
 /// Internal module for Direct3D 11 related functionality.
 mod d3d11;
 /// Contains the encoder functionality for encoding captured frames.
 pub mod encoder;
-/// Contains the `Frame` struct and related types for representing captured frames.
+/// Contains the `Frame` struct and related types for representing captured
+/// frames.
 pub mod frame;
 /// Contains the types and functions related to the Graphics Capture API.
 pub mod graphics_capture_api;
 /// Contains the functionality for working with monitors and screen information.
 pub mod monitor;
-/// Contains the `Settings` struct and related types for configuring the capture settings.
+/// Contains the `Settings` struct and related types for configuring the capture
+/// settings.
 pub mod settings;
-/// Contains the functionality for working with windows and capturing specific windows.
+/// Contains the functionality for working with windows and capturing specific
+/// windows.
 pub mod window;

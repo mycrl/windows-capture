@@ -95,7 +95,8 @@ impl Window {
     ///
     /// # Errors
     ///
-    /// Returns an `Error::NotFound` if no window with a matching name substring is found.
+    /// Returns an `Error::NotFound` if no window with a matching name substring
+    /// is found.
     pub fn from_contains_name(title: &str) -> Result<Self, Error> {
         let windows = Self::enumerate()?;
 
@@ -138,7 +139,8 @@ impl Window {
         Ok(name)
     }
 
-    /// Returns the monitor that has the largest area of intersection with the window.
+    /// Returns the monitor that has the largest area of intersection with the
+    /// window.
     ///
     /// Returns `None` if the window doesn't intersect with any monitor.
     #[must_use]

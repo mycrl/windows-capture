@@ -54,7 +54,8 @@ impl InternalCaptureControl {
     ///
     /// # Arguments
     ///
-    /// * `stop` - An `Arc<AtomicBool>` indicating whether the capture should stop.
+    /// * `stop` - An `Arc<AtomicBool>` indicating whether the capture should
+    ///   stop.
     ///
     /// # Returns
     ///
@@ -80,9 +81,11 @@ pub struct GraphicsCaptureApi {
     _direct3d_device: IDirect3DDevice,
     /// The ID3D11DeviceContext associated with the GraphicsCaptureApi.
     _d3d_device_context: ID3D11DeviceContext,
-    /// The optional Arc<Direct3D11CaptureFramePool> associated with the GraphicsCaptureApi.
+    /// The optional Arc<Direct3D11CaptureFramePool> associated with the
+    /// GraphicsCaptureApi.
     frame_pool: Option<Arc<Direct3D11CaptureFramePool>>,
-    /// The optional GraphicsCaptureSession associated with the GraphicsCaptureApi.
+    /// The optional GraphicsCaptureSession associated with the
+    /// GraphicsCaptureApi.
     session: Option<GraphicsCaptureSession>,
     /// The Arc<AtomicBool> used to halt the GraphicsCaptureApi.
     halt: Arc<AtomicBool>,
@@ -102,14 +105,16 @@ impl GraphicsCaptureApi {
     /// * `item` - The graphics capture item to capture.
     /// * `callback` - The callback handler for capturing frames.
     /// * `capture_cursor` - Optional flag to capture the cursor.
-    /// * `draw_border` - Optional flag to draw a border around the captured region.
+    /// * `draw_border` - Optional flag to draw a border around the captured
+    ///   region.
     /// * `color_format` - The color format for the captured frames.
     /// * `thread_id` - The ID of the thread where the capture is running.
     /// * `result` - The result of the capture operation.
     ///
     /// # Returns
     ///
-    /// Returns a `Result` containing the new `GraphicsCaptureApi` struct if successful, or an `Error` if an error occurred.
+    /// Returns a `Result` containing the new `GraphicsCaptureApi` struct if
+    /// successful, or an `Error` if an error occurred.
     pub fn new<
         T: GraphicsCaptureApiHandler<Error = E> + Send + 'static,
         E: Send + Sync + 'static,
@@ -345,7 +350,8 @@ impl GraphicsCaptureApi {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the capture started successfully, or an `Error` if an error occurred.
+    /// Returns `Ok(())` if the capture started successfully, or an `Error` if
+    /// an error occurred.
     pub fn start_capture(&mut self) -> Result<(), Error> {
         if self.active {
             return Err(Error::AlreadyStarted);
@@ -390,7 +396,8 @@ impl GraphicsCaptureApi {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(true)` if the API is supported, `Ok(false)` if the API is not supported, or an `Error` if an error occurred.
+    /// Returns `Ok(true)` if the API is supported, `Ok(false)` if the API is
+    /// not supported, or an `Error` if an error occurred.
     pub fn is_supported() -> Result<bool, Error> {
         Ok(ApiInformation::IsApiContractPresentByMajor(
             &HSTRING::from("Windows.Foundation.UniversalApiContract"),
@@ -402,7 +409,8 @@ impl GraphicsCaptureApi {
     ///
     /// # Returns
     ///
-    /// Returns `true` if toggling the cursor capture is supported, `false` otherwise.
+    /// Returns `true` if toggling the cursor capture is supported, `false`
+    /// otherwise.
     pub fn is_cursor_settings_supported() -> Result<bool, Error> {
         Ok(ApiInformation::IsPropertyPresent(
             &HSTRING::from("Windows.Graphics.Capture.GraphicsCaptureSession"),
@@ -414,7 +422,8 @@ impl GraphicsCaptureApi {
     ///
     /// # Returns
     ///
-    /// Returns `true` if toggling the border capture is supported, `false` otherwise.
+    /// Returns `true` if toggling the border capture is supported, `false`
+    /// otherwise.
     pub fn is_border_settings_supported() -> Result<bool, Error> {
         Ok(ApiInformation::IsPropertyPresent(
             &HSTRING::from("Windows.Graphics.Capture.GraphicsCaptureSession"),

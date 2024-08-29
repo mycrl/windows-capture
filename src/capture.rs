@@ -62,7 +62,8 @@ impl<T: GraphicsCaptureApiHandler + Send + 'static, E> CaptureControl<T, E> {
     ///
     /// * `thread_handle` - The join handle for the capture thread.
     /// * `halt_handle` - The atomic boolean used to pause the capture thread.
-    /// * `callback` - The mutex-protected callback struct used to call struct methods directly.
+    /// * `callback` - The mutex-protected callback struct used to call struct
+    ///   methods directly.
     ///
     /// # Returns
     ///
@@ -214,7 +215,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     /// The type of flags used to get the values from the settings.
     type Flags;
 
-    /// The type of error that can occur during capture, the error will be returned from `CaptureControl` and `start` functions.
+    /// The type of error that can occur during capture, the error will be
+    /// returned from `CaptureControl` and `start` functions.
     type Error: Send + Sync;
 
     /// Starts the capture and takes control of the current thread.
@@ -225,7 +227,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the capture was successful, otherwise returns an error of type `GraphicsCaptureApiError`.
+    /// Returns `Ok(())` if the capture was successful, otherwise returns an
+    /// error of type `GraphicsCaptureApiError`.
     fn start<T: TryInto<GraphicsCaptureItem>>(
         settings: Settings<Self::Flags, T>,
     ) -> Result<(), GraphicsCaptureApiError<Self::Error>>
@@ -332,7 +335,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(CaptureControl)` if the capture was successful, otherwise returns an error of type `GraphicsCaptureApiError`.
+    /// Returns `Ok(CaptureControl)` if the capture was successful, otherwise
+    /// returns an error of type `GraphicsCaptureApiError`.
     fn start_free_threaded<T: TryInto<GraphicsCaptureItem> + Send + 'static>(
         settings: Settings<Self::Flags, T>,
     ) -> Result<CaptureControl<Self, Self::Error>, GraphicsCaptureApiError<Self::Error>>
@@ -469,7 +473,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
         Ok(CaptureControl::new(thread_handle, halt_handle, callback))
     }
 
-    /// Function that will be called to create the struct. The flags can be passed from settings.
+    /// Function that will be called to create the struct. The flags can be
+    /// passed from settings.
     ///
     /// # Arguments
     ///
@@ -477,7 +482,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(Self)` if the struct creation was successful, otherwise returns an error of type `Self::Error`.
+    /// Returns `Ok(Self)` if the struct creation was successful, otherwise
+    /// returns an error of type `Self::Error`.
     fn new(flags: Self::Flags) -> Result<Self, Self::Error>;
 
     /// Called every time a new frame is available.
@@ -489,7 +495,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the frame processing was successful, otherwise returns an error of type `Self::Error`.
+    /// Returns `Ok(())` if the frame processing was successful, otherwise
+    /// returns an error of type `Self::Error`.
     fn on_frame_arrived(
         &mut self,
         frame: &mut Frame,
@@ -500,7 +507,8 @@ pub trait GraphicsCaptureApiHandler: Sized {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the handler execution was successful, otherwise returns an error of type `Self::Error`.
+    /// Returns `Ok(())` if the handler execution was successful, otherwise
+    /// returns an error of type `Self::Error`.
     fn on_closed(&mut self) -> Result<(), Self::Error> {
         Ok(())
     }
