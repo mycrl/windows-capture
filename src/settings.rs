@@ -1,4 +1,7 @@
-use windows::Graphics::Capture::GraphicsCaptureItem;
+use windows::{
+    Graphics::Capture::GraphicsCaptureItem,
+    Win32::Graphics::Direct3D11::{ID3D11Device, ID3D11DeviceContext},
+};
 
 #[derive(Eq, PartialEq, Clone, Copy, Debug)]
 pub enum ColorFormat {
@@ -28,6 +31,12 @@ pub enum DrawBorderSettings {
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
+pub struct Direct3D {
+    pub device: ID3D11Device,
+    pub context: ID3D11DeviceContext,
+}
+
+#[derive(Eq, PartialEq, Clone, Debug)]
 /// Represents the settings for screen capturing.
 pub struct Settings<Flags, T: TryInto<GraphicsCaptureItem>> {
     /// The graphics capture item to capture.
@@ -40,6 +49,7 @@ pub struct Settings<Flags, T: TryInto<GraphicsCaptureItem>> {
     pub color_format: ColorFormat,
     /// Additional flags for capturing graphics.
     pub flags: Flags,
+    pub direct3d: Option<Direct3D>,
 }
 
 impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
@@ -49,15 +59,18 @@ impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
     ///
     /// * `item` - The graphics capture item.
     /// * `capture_cursor` - Whether to capture the cursor or not.
-    /// * `draw_border` - Whether to draw a border around the captured region or not.
+    /// * `draw_border` - Whether to draw a border around the captured region or
+    ///   not.
     /// * `color_format` - The desired color format for the captured frame.
-    /// * `flags` - Additional flags for the capture settings that will be passed to user defined `new` function.
+    /// * `flags` - Additional flags for the capture settings that will be
+    ///   passed to user defined `new` function.
     pub const fn new(
         item: T,
         cursor_capture: CursorCaptureSettings,
         draw_border: DrawBorderSettings,
         color_format: ColorFormat,
         flags: Flags,
+        direct3d: Option<Direct3D>,
     ) -> Self {
         Self {
             item,
@@ -65,6 +78,7 @@ impl<Flags, T: TryInto<GraphicsCaptureItem>> Settings<Flags, T> {
             draw_border,
             color_format,
             flags,
+            direct3d,
         }
     }
 }

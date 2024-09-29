@@ -51,7 +51,9 @@ pub enum ImageEncoderError {
     WindowsError(#[from] windows::core::Error),
 }
 
-/// The `ImageEncoder` struct represents an image encoder that can be used to encode image buffers to image bytes with a specified format and color format.
+/// The `ImageEncoder` struct represents an image encoder that can be used to
+/// encode image buffers to image bytes with a specified format and color
+/// format.
 pub struct ImageEncoder {
     format: ImageFormat,
     color_format: ColorFormat,
@@ -89,7 +91,8 @@ impl ImageEncoder {
     ///
     /// # Errors
     ///
-    /// Returns an `Error` if the encoding fails or if the color format is unsupported.
+    /// Returns an `Error` if the encoding fails or if the color format is
+    /// unsupported.
     pub fn encode(
         &self,
         image_buffer: &[u8],
@@ -177,13 +180,15 @@ pub enum VideoEncoderQuality {
     Uhd4320p = 9,
 }
 
-/// The `VideoEncoderSource` struct represents all the types that can be send to the encoder.
+/// The `VideoEncoderSource` struct represents all the types that can be send to
+/// the encoder.
 pub enum VideoEncoderSource {
     DirectX(SendDirectX<IDirect3DSurface>),
     Buffer((SendDirectX<*const u8>, usize)),
 }
 
-/// The `VideoEncoder` struct represents a video encoder that can be used to encode video frames and save them to a specified file path.
+/// The `VideoEncoder` struct represents a video encoder that can be used to
+/// encode video frames and save them to a specified file path.
 pub struct VideoEncoder {
     first_timespan: Option<TimeSpan>,
     frame_sender: mpsc::Sender<Option<(VideoEncoderSource, TimeSpan)>>,
@@ -208,8 +213,8 @@ impl VideoEncoder {
     ///
     /// # Returns
     ///
-    /// Returns a `Result` containing the `VideoEncoder` instance if successful, or a
-    /// `VideoEncoderError` if an error occurs.
+    /// Returns a `Result` containing the `VideoEncoder` instance if successful,
+    /// or a `VideoEncoderError` if an error occurs.
     pub fn new<P: AsRef<Path>>(
         encoder_type: VideoEncoderType,
         encoder_quality: VideoEncoderQuality,
@@ -240,12 +245,8 @@ impl VideoEncoder {
                 MediaEncodingProfile::CreateVp9(VideoEncodingQuality(encoder_quality as i32))?
             }
         };
-        media_encoding_profile
-            .Video()?
-            .SetWidth(width)?;
-        media_encoding_profile
-            .Video()?
-            .SetHeight(height)?;
+        media_encoding_profile.Video()?.SetWidth(width)?;
+        media_encoding_profile.Video()?.SetHeight(height)?;
         if fps.is_some() {
             media_encoding_profile
                 .Video()?
@@ -256,7 +257,7 @@ impl VideoEncoder {
                 .FrameRate()?
                 .SetDenominator(1)?;
         }
-    
+
         let video_encoding_properties = VideoEncodingProperties::CreateUncompressed(
             &MediaEncodingSubtypes::Bgra8()?,
             width,
@@ -400,8 +401,8 @@ impl VideoEncoder {
     ///
     /// # Returns
     ///
-    /// Returns a `Result` containing the `VideoEncoder` instance if successful, or a
-    /// `VideoEncoderError` if an error occurs.
+    /// Returns a `Result` containing the `VideoEncoder` instance if successful,
+    /// or a `VideoEncoderError` if an error occurs.
     pub fn new_from_stream<P: AsRef<Path>>(
         encoder_type: VideoEncoderType,
         encoder_quality: VideoEncoderQuality,
@@ -560,8 +561,8 @@ impl VideoEncoder {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the frame is successfully sent for encoding, or a `VideoEncoderError`
-    /// if an error occurs.
+    /// Returns `Ok(())` if the frame is successfully sent for encoding, or a
+    /// `VideoEncoderError` if an error occurs.
     pub fn send_frame(&mut self, frame: &mut Frame) -> Result<(), VideoEncoderError> {
         let timespan = match self.first_timespan {
             Some(timespan) => TimeSpan {
@@ -601,13 +602,14 @@ impl VideoEncoder {
     ///
     /// # Arguments
     ///
-    /// * `buffer` - A reference to the byte slice to be encoded Windows API expect this to be Bgra and bottom-top.
+    /// * `buffer` - A reference to the byte slice to be encoded Windows API
+    ///   expect this to be Bgra and bottom-top.
     /// * `timespan` - The timespan that correlates to the frame buffer.
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the frame is successfully sent for encoding, or a `VideoEncoderError`
-    /// if an error occurs.
+    /// Returns `Ok(())` if the frame is successfully sent for encoding, or a
+    /// `VideoEncoderError` if an error occurs.
     pub fn send_frame_buffer(
         &mut self,
         buffer: &[u8],
@@ -653,8 +655,8 @@ impl VideoEncoder {
     ///
     /// # Returns
     ///
-    /// Returns `Ok(())` if the encoding is successfully finished, or a `VideoEncoderError` if an
-    /// error occurs.
+    /// Returns `Ok(())` if the encoding is successfully finished, or a
+    /// `VideoEncoderError` if an error occurs.
     pub fn finish(mut self) -> Result<(), VideoEncoderError> {
         self.frame_sender.send(None)?;
 

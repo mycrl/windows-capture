@@ -13,7 +13,8 @@ use windows::{
         Direct3D11::{
             ID3D11Device, ID3D11DeviceContext, ID3D11Texture2D, D3D11_BOX, D3D11_CPU_ACCESS_READ,
             D3D11_CPU_ACCESS_WRITE, D3D11_MAPPED_SUBRESOURCE, D3D11_MAP_READ_WRITE,
-            D3D11_TEXTURE2D_DESC, D3D11_USAGE_STAGING,
+            D3D11_RESOURCE_MISC_SHARED, D3D11_TEXTURE2D_DESC, D3D11_USAGE_DEFAULT,
+            D3D11_USAGE_STAGING,
         },
         Dxgi::Common::{DXGI_FORMAT, DXGI_SAMPLE_DESC},
     },
@@ -150,10 +151,15 @@ impl<'a> Frame<'a> {
     ///
     /// # Safety
     ///
-    /// This method is unsafe because it returns a raw pointer to the IDirect3DSurface.
+    /// This method is unsafe because it returns a raw pointer to the
+    /// IDirect3DSurface.
     #[must_use]
     pub unsafe fn as_raw_surface(&self) -> IDirect3DSurface {
         self.frame_surface.clone()
+    }
+
+    pub fn texture_ref(&self) -> &ID3D11Texture2D {
+        &self.frame_texture
     }
 
     /// Get the raw texture of the frame.
@@ -173,10 +179,10 @@ impl<'a> Frame<'a> {
                 Count: 1,
                 Quality: 0,
             },
-            Usage: D3D11_USAGE_STAGING,
+            Usage: D3D11_USAGE_DEFAULT,
             BindFlags: 0,
-            CPUAccessFlags: D3D11_CPU_ACCESS_READ.0 as u32 | D3D11_CPU_ACCESS_WRITE.0 as u32,
-            MiscFlags: 0,
+            CPUAccessFlags: 0,
+            MiscFlags: D3D11_RESOURCE_MISC_SHARED.0 as u32,
         };
 
         // Create a texture that CPU can read
@@ -185,9 +191,9 @@ impl<'a> Frame<'a> {
             self.d3d_device
                 .CreateTexture2D(&texture_desc, None, Some(&mut texture))?;
         };
-        
+
         let texture = texture.unwrap();
-        
+
         // Copy the real texture to copy texture
         unsafe {
             self.context.CopyResource(&texture, &self.frame_texture);
@@ -356,7 +362,8 @@ impl<'a> Frame<'a> {
     ///
     /// # Returns
     ///
-    /// An empty Result if successful, or an Error if there was an issue saving the image.
+    /// An empty Result if successful, or an Error if there was an issue saving
+    /// the image.
     pub fn save_as_image<T: AsRef<Path>>(
         &mut self,
         path: T,
@@ -394,7 +401,8 @@ impl<'a> FrameBuffer<'a> {
     /// # Arguments
     ///
     /// * `raw_buffer` - A mutable reference to the raw pixel data buffer.
-    /// * `buffer` - A mutable reference to the buffer used for copying pixel data without padding.
+    /// * `buffer` - A mutable reference to the buffer used for copying pixel
+    ///   data without padding.
     /// * `width` - The width of the frame buffer.
     /// * `height` - The height of the frame buffer.
     /// * `row_pitch` - The row pitch of the frame buffer.
@@ -509,7 +517,8 @@ impl<'a> FrameBuffer<'a> {
     ///
     /// # Returns
     ///
-    /// An `Ok` result if the image is successfully saved, or an `Err` result if there was an error.
+    /// An `Ok` result if the image is successfully saved, or an `Err` result if
+    /// there was an error.
     pub fn save_as_image<T: AsRef<Path>>(
         &mut self,
         path: T,

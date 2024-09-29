@@ -84,12 +84,14 @@ impl Monitor {
     ///
     /// # Arguments
     ///
-    /// * `index` - The index of the monitor to retrieve. The index starts from 1.
+    /// * `index` - The index of the monitor to retrieve. The index starts from
+    ///   1.
     ///
     /// # Errors
     ///
     /// Returns an `Error::IndexIsLowerThanOne` if the index is less than 1.
-    /// Returns an `Error::NotFound` if the monitor at the specified index is not found.
+    /// Returns an `Error::NotFound` if the monitor at the specified index is
+    /// not found.
     pub fn from_index(index: usize) -> Result<Self, Error> {
         if index < 1 {
             return Err(Error::IndexIsLowerThanOne);
@@ -231,7 +233,8 @@ impl Monitor {
     ///
     /// # Errors
     ///
-    /// Returns an `Error` if there is an error retrieving the monitor device name.
+    /// Returns an `Error` if there is an error retrieving the monitor device
+    /// name.
     pub fn device_name(&self) -> Result<String, Error> {
         let mut monitor_info = MONITORINFOEXW {
             monitorInfo: MONITORINFO {
@@ -269,7 +272,8 @@ impl Monitor {
     ///
     /// # Errors
     ///
-    /// Returns an `Error` if there is an error retrieving the monitor device string.
+    /// Returns an `Error` if there is an error retrieving the monitor device
+    /// string.
     pub fn device_string(&self) -> Result<String, Error> {
         let mut monitor_info = MONITORINFOEXW {
             monitorInfo: MONITORINFO {
@@ -328,7 +332,8 @@ impl Monitor {
     ///
     /// # Errors
     ///
-    /// Returns an `Error` if there is an error retrieving the monitor refresh rate.
+    /// Returns an `Error` if there is an error retrieving the monitor refresh
+    /// rate.
     pub fn refresh_rate(&self) -> Result<u32, Error> {
         let mut device_mode = DEVMODEW {
             dmSize: u16::try_from(mem::size_of::<DEVMODEW>()).unwrap(),
